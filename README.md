@@ -2,10 +2,10 @@
 
 #### This is the fork of Yalantis crop library with fixes and updates.
 
-====================================================
-
 ![Release](https://jitpack.io/v/maxxx/uCrop.svg)
 (https://jitpack.io/#maxxx/uCrop)
+
+====================================================
 
 This project aims to provide an ultimate and flexible image cropping experience. Made in [Yalantis](https://yalantis.com/?utm_source=github)
 
