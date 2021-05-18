@@ -1,6 +1,11 @@
 # uCrop - Image Cropping Library for Android
 
-#### This project aims to provide an ultimate and flexible image cropping experience. Made in [Yalantis](https://yalantis.com/?utm_source=github)
+#### This is the fork of Yalantis crop library with fixes and updates.
+
+[![Release](https://jitpack.io/v/maxxx/uCrop.svg)]
+(https://jitpack.io/#maxxx/uCrop)
+
+This project aims to provide an ultimate and flexible image cropping experience. Made in [Yalantis](https://yalantis.com/?utm_source=github)
 
 #### [How We Created uCrop](https://yalantis.com/blog/how-we-created-ucrop-our-own-image-cropping-library-for-android/)
 #### Check this [project on Dribbble](https://dribbble.com/shots/2484752-uCrop-Image-Cropping-Library)
@@ -24,10 +29,7 @@
 	}
 	```
 
-    ``` implementation 'com.github.yalantis:ucrop:2.2.6' ``` - lightweight general solution
-    
-    ``` implementation 'com.github.yalantis:ucrop:2.2.6-native' ``` - get power of the native code to preserve image quality (+ about 1.5 MB to an apk size)
-    
+    ``` implementation 'com.github.maxxx:uCrop:x.y.z' ```
 2. Add UCropActivity into your AndroidManifest.xml
 
     ```

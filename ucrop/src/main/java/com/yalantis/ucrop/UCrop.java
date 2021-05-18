@@ -11,11 +11,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 
-import com.yalantis.ucrop.model.AspectRatio;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Locale;
+
+import com.yalantis.ucrop.model.AspectRatio;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
@@ -35,7 +35,7 @@ public class UCrop {
     public static final int RESULT_ERROR = 96;
     public static final int MIN_SIZE = 10;
 
-    private static final String EXTRA_PREFIX = BuildConfig.APPLICATION_ID;
+    private static final String EXTRA_PREFIX = BuildConfig.LIBRARY_PACKAGE_NAME;
 
     public static final String EXTRA_INPUT_URI = EXTRA_PREFIX + ".InputUri";
     public static final String EXTRA_OUTPUT_URI = EXTRA_PREFIX + ".OutputUri";
