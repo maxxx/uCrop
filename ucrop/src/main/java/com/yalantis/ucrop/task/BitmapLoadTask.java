@@ -8,19 +8,19 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.yalantis.ucrop.callback.BitmapLoadCallback;
-import com.yalantis.ucrop.model.ExifInfo;
-import com.yalantis.ucrop.util.BitmapLoadUtils;
-
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.yalantis.ucrop.callback.BitmapLoadCallback;
+import com.yalantis.ucrop.model.ExifInfo;
+import com.yalantis.ucrop.util.BitmapLoadUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -91,6 +91,13 @@ public class BitmapLoadTask extends AsyncTask<Void, Void, BitmapLoadTask.BitmapW
 
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
+        try {
+            BitmapFactory.decodeStream(mContext.getContentResolver().openInputStream(mInputUri) ,
+                    null,
+                    options);
+        } catch (FileNotFoundException e) {
+            return new BitmapWorkerResult(new IllegalArgumentException("Input file not found for [" + mInputUri + "]", e));
+        }
         options.inSampleSize = BitmapLoadUtils.calculateInSampleSize(options, mRequiredWidth, mRequiredHeight);
         options.inJustDecodeBounds = false;
 
@@ -100,6 +107,7 @@ public class BitmapLoadTask extends AsyncTask<Void, Void, BitmapLoadTask.BitmapW
         while (!decodeAttemptSuccess) {
             try {
                 InputStream stream = mContext.getContentResolver().openInputStream(mInputUri);
+
                 try {
                     decodeSampledBitmap = BitmapFactory.decodeStream(stream, null, options);
                     if (options.outWidth == -1 || options.outHeight == -1) {
@@ -108,7 +116,9 @@ public class BitmapLoadTask extends AsyncTask<Void, Void, BitmapLoadTask.BitmapW
                 } finally {
                     BitmapLoadUtils.close(stream);
                 }
+
                 if (checkSize(decodeSampledBitmap, options)) continue;
+
                 decodeAttemptSuccess = true;
             } catch (OutOfMemoryError error) {
                 Log.e(TAG, "doInBackground: BitmapFactory.decodeFileDescriptor: ", error);
