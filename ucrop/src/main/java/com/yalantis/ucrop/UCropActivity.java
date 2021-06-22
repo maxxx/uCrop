@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -133,6 +134,12 @@ public class UCropActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mGestureCropImageView.cleanup();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.ucrop_menu_activity, menu);
 
@@ -199,7 +206,9 @@ public class UCropActivity extends AppCompatActivity {
 
         if (inputUri != null && outputUri != null) {
             try {
-                mGestureCropImageView.setImageUri(inputUri, outputUri);
+                File croppedPhoto = new File(getCacheDir(), "cropped_image");
+                Uri tempPhotoUri = Uri.fromFile(croppedPhoto);
+                mGestureCropImageView.setImageUri(inputUri, outputUri, tempPhotoUri);
             } catch (Exception e) {
                 setResultError(e);
                 finish();

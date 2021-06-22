@@ -17,6 +17,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.File;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import com.yalantis.ucrop.callback.BitmapCropCallback;
 import com.yalantis.ucrop.model.AspectRatio;
 import com.yalantis.ucrop.util.SelectedStateListDrawable;
@@ -27,12 +34,6 @@ import com.yalantis.ucrop.view.TransformImageView;
 import com.yalantis.ucrop.view.UCropView;
 import com.yalantis.ucrop.view.widget.AspectRatioTextView;
 import com.yalantis.ucrop.view.widget.HorizontalProgressWheelView;
-
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.IdRes;
@@ -136,6 +137,11 @@ public class UCropFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mGestureCropImageView.cleanup();
+    }
 
     public void setupViews(View view, Bundle args) {
         mActiveControlsWidgetColor = args.getInt(UCrop.Options.EXTRA_UCROP_COLOR_CONTROLS_WIDGET_ACTIVE, ContextCompat.getColor(getContext(), R.color.ucrop_color_widget_active));
@@ -184,7 +190,9 @@ public class UCropFragment extends Fragment {
 
         if (inputUri != null && outputUri != null) {
             try {
-                mGestureCropImageView.setImageUri(inputUri, outputUri);
+                File croppedPhoto = new File(getContext().getCacheDir(), "cropped_image");
+                Uri tempPhotoUri = Uri.fromFile(croppedPhoto);
+                mGestureCropImageView.setImageUri(inputUri, outputUri, tempPhotoUri);
             } catch (Exception e) {
                 callback.onCropFinish(getError(e));
             }

@@ -20,14 +20,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.yalantis.ucrop.view.UCropView;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 import java.util.Calendar;
 import java.util.List;
+
+import com.yalantis.ucrop.view.UCropView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -62,7 +62,7 @@ public class ResultActivity extends BaseActivity {
         if (uri != null) {
             try {
                 UCropView uCropView = findViewById(R.id.ucrop);
-                uCropView.getCropImageView().setImageUri(uri, null);
+                uCropView.getCropImageView().setImageUri(uri, null, null);
                 uCropView.getOverlayView().setShowCropFrame(false);
                 uCropView.getOverlayView().setShowCropGrid(false);
                 uCropView.getOverlayView().setDimmedColor(Color.TRANSPARENT);

@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import java.io.File;
+
 import com.yalantis.ucrop.callback.BitmapLoadCallback;
 import com.yalantis.ucrop.model.ExifInfo;
 import com.yalantis.ucrop.util.BitmapLoadUtils;
@@ -52,7 +54,7 @@ public class TransformImageView extends AppCompatImageView {
 
     private int mMaxBitmapSize = 0;
 
-    private String mImageInputPath, mImageOutputPath;
+    private String mImageInputPath, mImageOutputPath, mImageTempOutputPath;
     private ExifInfo mExifInfo;
 
     /**
@@ -136,16 +138,17 @@ public class TransformImageView extends AppCompatImageView {
      * @param imageUri - image Uri
      * @throws Exception - can throw exception if having problems with decoding Uri or OOM.
      */
-    public void setImageUri(@NonNull Uri imageUri, @Nullable Uri outputUri) throws Exception {
+    public void setImageUri(@NonNull Uri imageUri, @Nullable Uri outputUri, @Nullable Uri tempOutputUri) throws Exception {
         int maxBitmapSize = getMaxBitmapSize();
 
-        BitmapLoadUtils.decodeBitmapInBackground(getContext(), imageUri, outputUri, maxBitmapSize, maxBitmapSize,
+        BitmapLoadUtils.decodeBitmapInBackground(getContext(), imageUri, tempOutputUri, maxBitmapSize, maxBitmapSize,
                 new BitmapLoadCallback() {
 
                     @Override
                     public void onBitmapLoaded(@NonNull Bitmap bitmap, @NonNull ExifInfo exifInfo, @NonNull String imageInputPath, @Nullable String imageOutputPath) {
                         mImageInputPath = imageInputPath;
-                        mImageOutputPath = imageOutputPath;
+                        mImageOutputPath = outputUri != null ? outputUri.getPath() : null;
+                        mImageTempOutputPath = imageOutputPath;
                         mExifInfo = exifInfo;
 
                         mBitmapDecoded = true;
@@ -160,6 +163,12 @@ public class TransformImageView extends AppCompatImageView {
                         }
                     }
                 });
+    }
+
+    public void cleanup() {
+        if (mImageTempOutputPath != null) {
+            new File(mImageTempOutputPath).delete();
+        }
     }
 
     /**
