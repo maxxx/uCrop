@@ -1,7 +1,6 @@
 package com.yalantis.ucrop.sample;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -193,14 +192,14 @@ public class ResultActivity extends BaseActivity {
                 .setTicker(getString(R.string.notification_image_saved))
                 .setSmallIcon(R.drawable.ic_done)
                 .setOngoing(false)
-                .setContentIntent(PendingIntent.getActivity(this, 0, intent, 0))
+                .setContentIntent(PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE))
                 .setAutoCancel(true);
         if (notificationManager != null) {
             notificationManager.notify(DOWNLOAD_NOTIFICATION_ID_DONE, notificationBuilder.build());
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.O)
+    @androidx.annotation.RequiresApi(Build.VERSION_CODES.O)
     public NotificationChannel createChannel() {
         int importance = NotificationManager.IMPORTANCE_LOW;
         NotificationChannel channel = new NotificationChannel(CHANNEL_ID, getString(R.string.channel_name), importance);
