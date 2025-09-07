@@ -1,4 +1,7 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish' // for Jitpack
+
+group='com.github.maxxx.uCrop' // for Jitpack
 
 android {
     compileSdkVersion 35
@@ -7,13 +10,19 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 35
-
+        consumerProguardFiles = ['proguard-rules.pro']
         vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            consumerProguardFiles 'proguard-rules.pro'
+        }
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            consumerProguardFiles 'proguard-rules.pro'
         }
     }
     compileOptions {
@@ -44,5 +53,20 @@ dependencies {
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+// for Jitpack
+publishing {
+    publications {
+        // Creates a Maven publication called "release".
+        release(MavenPublication) {
+            groupId = 'com.github.maxxx.uCrop'
+            artifactId = 'lib'
+
+            afterEvaluate {
+                from components.findByName('release')
+            }
+        }
     }
 }
