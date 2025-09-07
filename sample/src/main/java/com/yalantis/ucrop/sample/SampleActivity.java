@@ -86,7 +86,7 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
+		if (resultCode == RESULT_OK) {
             if (requestCode == requestMode) {
                 final Uri selectedUri = data.getData();
                 if (selectedUri != null) {
@@ -101,6 +101,7 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
         if (resultCode == UCrop.RESULT_ERROR) {
             handleCropError(data);
         }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private TextWatcher mAspectRatioTextWatcher = new TextWatcher() {
@@ -221,14 +222,10 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
 
     private void startCrop(@NonNull Uri uri) {
         String destinationFileName = SAMPLE_CROPPED_IMAGE_NAME;
-        switch (mRadioGroupCompressionSettings.getCheckedRadioButtonId()) {
-            case R.id.radio_png:
-                destinationFileName += ".png";
-                break;
-            case R.id.radio_jpeg:
-                destinationFileName += ".jpg";
-                break;
-        }
+        if (mRadioGroupCompressionSettings.getCheckedRadioButtonId() == R.id.radio_png)
+            destinationFileName += ".png";
+        else if (mRadioGroupCompressionSettings.getCheckedRadioButtonId() == R.id.radio_jpeg)
+            destinationFileName += ".jpg";
 
         UCrop uCrop = UCrop.of(uri, Uri.fromFile(new File(getCacheDir(), destinationFileName)));
 
@@ -250,28 +247,23 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
      * @return - ucrop builder instance
      */
     private UCrop basisConfig(@NonNull UCrop uCrop) {
-        switch (mRadioGroupAspectRatio.getCheckedRadioButtonId()) {
-            case R.id.radio_origin:
-                uCrop = uCrop.useSourceImageAspectRatio();
-                break;
-            case R.id.radio_square:
-                uCrop = uCrop.withAspectRatio(1, 1);
-                break;
-            case R.id.radio_dynamic:
-                // do nothing
-                break;
-            default:
-                try {
-                    float ratioX = Float.valueOf(mEditTextRatioX.getText().toString().trim());
-                    float ratioY = Float.valueOf(mEditTextRatioY.getText().toString().trim());
-                    if (ratioX > 0 && ratioY > 0) {
-                        uCrop = uCrop.withAspectRatio(ratioX, ratioY);
-                    }
-                } catch (NumberFormatException e) {
-                    Log.i(TAG, String.format("Number please: %s", e.getMessage()));
-                }
-                break;
-        }
+		int checkedRadioButtonId = mRadioGroupAspectRatio.getCheckedRadioButtonId();
+		if (checkedRadioButtonId == R.id.radio_origin) {
+			uCrop = uCrop.useSourceImageAspectRatio();
+		} else if (checkedRadioButtonId == R.id.radio_square) {
+			uCrop = uCrop.withAspectRatio(1, 1);
+		} else if (checkedRadioButtonId == R.id.radio_dynamic) {// do nothing
+		} else {
+			try {
+				float ratioX = Float.valueOf(mEditTextRatioX.getText().toString().trim());
+				float ratioY = Float.valueOf(mEditTextRatioY.getText().toString().trim());
+				if (ratioX > 0 && ratioY > 0) {
+					uCrop = uCrop.withAspectRatio(ratioX, ratioY);
+				}
+			} catch (NumberFormatException e) {
+				Log.i(TAG, String.format("Number please: %s", e.getMessage()));
+			}
+		}
 
         if (mCheckBoxMaxSize.isChecked()) {
             try {
@@ -297,15 +289,12 @@ public class SampleActivity extends BaseActivity implements UCropFragmentCallbac
     private UCrop advancedConfig(@NonNull UCrop uCrop) {
         UCrop.Options options = new UCrop.Options();
 
-        switch (mRadioGroupCompressionSettings.getCheckedRadioButtonId()) {
-            case R.id.radio_png:
-                options.setCompressionFormat(Bitmap.CompressFormat.PNG);
-                break;
-            case R.id.radio_jpeg:
-            default:
-                options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
-                break;
-        }
+		int checkedRadioButtonId = mRadioGroupCompressionSettings.getCheckedRadioButtonId();
+		if (checkedRadioButtonId == R.id.radio_png) {
+			options.setCompressionFormat(Bitmap.CompressFormat.PNG);
+		} else {
+			options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+		}
         options.setCompressionQuality(mSeekBarQuality.getProgress());
 
         options.setHideBottomControls(mCheckBoxHideBottomControls.isChecked());

@@ -1,12 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 35
+    namespace "com.yalantis.ucrop.sample"
 
     defaultConfig {
         applicationId "com.yalantis.ucrop.sample"
         minSdkVersion 14
-        targetSdkVersion 30
+        targetSdkVersion 35
         versionCode 13
         versionName "1.2.4"
     }
@@ -18,11 +19,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
-    lintOptions {
-        abortOnError false
+    buildFeatures {
+        buildConfig true
     }
     productFlavors {
         activity {
@@ -31,6 +32,9 @@ android {
         fragment {
             buildConfigField("int","RequestMode", "2")
         }
+    }
+    lint {
+        abortOnError false
     }
 }
 

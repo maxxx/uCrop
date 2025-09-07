@@ -23,6 +23,7 @@
         </provider>
 
         <activity
+            android:exported="true"
             android:name=".SampleActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,6 +37,7 @@
 
         <!-- You can set your own theme -->
         <activity
+            android:exported="true"
             android:name="com.yalantis.ucrop.UCropActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 

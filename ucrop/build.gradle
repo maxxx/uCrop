@@ -1,13 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 35
+    namespace "com.yalantis.ucrop"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 30
-        versionCode 27
-        versionName "2.3"
+        targetSdkVersion 35
 
         vectorDrawables.useSupportLibrary = true
     }
@@ -18,17 +17,20 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
-    lintOptions {
-        abortOnError false
+    buildFeatures {
+        buildConfig true
     }
 
     resourcePrefix 'ucrop_'
 
     sourceSets.main {
         jni.srcDirs = []
+    }
+    lint {
+        abortOnError false
     }
 
 }
@@ -38,4 +40,9 @@ dependencies {
     implementation "androidx.exifinterface:exifinterface:${androidx_exifinterface_version}"
     implementation "androidx.transition:transition:${androidx_transition_version}"
     implementation "com.squareup.okhttp3:okhttp:3.12.1"
+}
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
